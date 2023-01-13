@@ -9,71 +9,69 @@ using System.Threading.Tasks;
 
 namespace ConsoleChatApp.Repositories
 {
-    // For simplicty, we assume that there are only two
-    // users with unique emails/logins
-    public class UserRepository : IUserRepository
-    {
-        public Person GetUserByLogin(string login)
-        {
-            using (AppDbContext _dataContext = new AppDbContext())
-            {
-                return _dataContext.People.FirstOrDefault(p => p.EmailAddress == login);
-            }
-        }
+	// For simplicty, we assume that there are only two
+	// users with unique emails/logins
+	public class UserRepository : IUserRepository
+	{
+		private readonly AppDbContext _dbContext;
 
-        public Person GetOtherUserByLogin(string currentPersonLogin)
-        {
-            using (AppDbContext _dataContext = new AppDbContext())
-            {
-                return _dataContext.People.FirstOrDefault(p => p.EmailAddress != currentPersonLogin);
-            }
-        }
+		public UserRepository(AppDbContext dbContext)
+		{
+			_dbContext = dbContext;
+		}
 
-        // (Example) Getting response from DB without DbContext
-        public Person GetUserById(int id)
-        {
-            using (var sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Sample"].ConnectionString))
-            {
-                sqlConnection.Open();
+		public Person GetUserByLogin(string login)
+		{
+			return _dbContext.People.FirstOrDefault(p => p.EmailAddress == login);
+		}
 
-                using (SqlCommand sqlCommand = new SqlCommand($"SELECT * FROM dbo.People WHERE id = {id}", sqlConnection))
-                {
-                    var sqlReader = sqlCommand.ExecuteReader();
+		public Person GetOtherUserByLogin(string currentPersonLogin)
+		{
+			return _dbContext.People.FirstOrDefault(p => p.EmailAddress != currentPersonLogin);
+		}
 
-                    var response = new Person();
-                    if (sqlReader.HasRows)
-                    {
-                        while (sqlReader.Read())
-                        {
-                            response.id = sqlReader
-                                .GetInt32(sqlReader.GetOrdinal("id"));
-                            response.FirstName = sqlReader
-                                .GetString(sqlReader.GetOrdinal("FirstName"));
-                            response.LastName = sqlReader
-                                .GetString(sqlReader.GetOrdinal("LastName"));
-                            response.EmailAddress = sqlReader
-                                .GetString(sqlReader.GetOrdinal("EmailAddress"));
-                            response.PhoneNumber = sqlReader
-                                .GetString(sqlReader.GetOrdinal("PhoneNumber"));
-                        }
-                    }
+		// (Example) Getting response from DB without DbContext
+		public Person GetUserById(int id)
+		{
+			using (var sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Sample"].ConnectionString))
+			{
+				sqlConnection.Open();
 
-                    return response;
-                }
-            }
-        }
+				using (SqlCommand sqlCommand = new SqlCommand($"SELECT * FROM dbo.People WHERE id = {id}", sqlConnection))
+				{
+					var sqlReader = sqlCommand.ExecuteReader();
 
-        public async Task<List<Person>> GetAllAvailableUsers()
-        {
-           using (AppDbContext _dbDataContext = new AppDbContext())
-           {
-              return await _dbDataContext.People.Where(p => p.IsLogged).ToListAsync();
-           }
-        }
+					var response = new Person();
+					if (sqlReader.HasRows)
+					{
+						while (sqlReader.Read())
+						{
+							response.id = sqlReader
+								 .GetInt32(sqlReader.GetOrdinal("id"));
+							response.FirstName = sqlReader
+								 .GetString(sqlReader.GetOrdinal("FirstName"));
+							response.LastName = sqlReader
+								 .GetString(sqlReader.GetOrdinal("LastName"));
+							response.EmailAddress = sqlReader
+								 .GetString(sqlReader.GetOrdinal("EmailAddress"));
+							response.PhoneNumber = sqlReader
+								 .GetString(sqlReader.GetOrdinal("PhoneNumber"));
+						}
+					}
 
-      public bool IsOtherUserLoggedIn(string currentPersonLogin)
-        {
-            return GetOtherUserByLogin(currentPersonLogin).IsLogged;
-        }
-    }
+					return response;
+				}
+			}
+		}
+
+		public async Task<List<Person>> GetAllAvailableUsers()
+		{
+			return await _dbContext.People.Where(p => p.IsLogged).ToListAsync();
+		}
+
+		public bool IsOtherUserLoggedIn(string currentPersonLogin)
+		{
+			return GetOtherUserByLogin(currentPersonLogin).IsLogged;
+		}
+	}
 }

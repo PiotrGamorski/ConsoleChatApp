@@ -19,6 +19,7 @@ namespace ConsoleChatApp
 			return Host.CreateDefaultBuilder(args)
 				.ConfigureServices((_, services) =>
 				{
+					services.AddDbContext<AppDbContext>();
 					services.AddSingleton<App>();
 					services.AddSingleton<IUserRepository, UserRepository>();
 					services.AddSingleton<IMessageRepository, MessageRepository>();

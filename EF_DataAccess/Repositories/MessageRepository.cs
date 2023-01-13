@@ -4,16 +4,20 @@ using System.Linq;
 
 namespace ConsoleChatApp.Repositories
 {
-    public class MessageRepository : IMessageRepository
-    {
-        public Message GetLastMessage()
-        {
-            using (AppDbContext _dataContext = new AppDbContext())
-            {
-                return _dataContext.Messages
-                    .OrderBy(m => m.DateCreated)
-                    .LastOrDefault();
-            }
-        }
-    }
+	public class MessageRepository : IMessageRepository
+	{
+		private readonly AppDbContext _dbContext;
+
+		public MessageRepository(AppDbContext dbContext)
+		{
+			_dbContext = dbContext;
+		}
+
+		public Message GetLastMessage()
+		{
+			return _dbContext.Messages
+						 .OrderBy(m => m.DateCreated)
+						 .LastOrDefault();
+		}
+	}
 }
