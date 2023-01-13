@@ -13,7 +13,7 @@ namespace ConsoleChatApp.Repositories
     // users with unique emails/logins
     public class UserRepository : IUserRepository
     {
-        public Person GetUser(string login)
+        public Person GetUserByLogin(string login)
         {
             using (AppDbContext _dataContext = new AppDbContext())
             {
@@ -21,7 +21,7 @@ namespace ConsoleChatApp.Repositories
             }
         }
 
-        public Person GetOtherUser(string currentPersonLogin)
+        public Person GetOtherUserByLogin(string currentPersonLogin)
         {
             using (AppDbContext _dataContext = new AppDbContext())
             {
@@ -30,7 +30,7 @@ namespace ConsoleChatApp.Repositories
         }
 
         // (Example) Getting response from DB without DbContext
-        public Person GetUser(int id)
+        public Person GetUserById(int id)
         {
             using (var sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["Sample"].ConnectionString))
             {
@@ -63,7 +63,7 @@ namespace ConsoleChatApp.Repositories
             }
         }
 
-        public async Task<List<Person>> GetAvailableUsers()
+        public async Task<List<Person>> GetAllAvailableUsers()
         {
            using (AppDbContext _dbDataContext = new AppDbContext())
            {
@@ -73,7 +73,7 @@ namespace ConsoleChatApp.Repositories
 
       public bool IsOtherUserLoggedIn(string currentPersonLogin)
         {
-            return GetOtherUser(currentPersonLogin).IsLogged;
+            return GetOtherUserByLogin(currentPersonLogin).IsLogged;
         }
     }
 }

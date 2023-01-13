@@ -2,7 +2,7 @@
 
 namespace ConsoleChatApp.Interfaces
 {
-    interface IProcessEvent
+    public interface IProcessEvent
     {
         void Process(object sender, EventArgs e);
     }

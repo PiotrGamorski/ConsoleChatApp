@@ -23,14 +23,14 @@ namespace ConsoleChatApp.DependencyChanges
 
         public async void OnDependencyChange(object sender, EventArgs e)
         {
-            var currentUser = _userRepository.GetUser(CommonData.Login);
+            var currentUser = _userRepository.GetUserByLogin(CommonData.Login);
 
             string userName;
 
             if (_messageRepository.GetLastMessage().MesssageRecipientId == currentUser.id)
                 userName = currentUser.FirstName;
             else
-                userName = _userRepository.GetOtherUser(CommonData.Login).FirstName;
+                userName = _userRepository.GetOtherUserByLogin(CommonData.Login).FirstName;
 
             Console.WriteLine($"{userName}: {_messageRepository.GetLastMessage().Text}");
             await _sqlNotification.CreateSqlNotification(this);

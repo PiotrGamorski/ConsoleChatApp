@@ -23,7 +23,7 @@ namespace ConsoleChatApp.DependencyChanges
         {
             using (AppDbContext _dataContex = new AppDbContext())
             {
-                CommonData.IsOtherUserLoggedIn = _repository.GetOtherUser(CommonData.Login).IsLogged;
+                CommonData.IsOtherUserLoggedIn = _repository.GetOtherUserByLogin(CommonData.Login).IsLogged;
                 await _sqlNotificationService.CreateSqlNotification(this);
             }
         }

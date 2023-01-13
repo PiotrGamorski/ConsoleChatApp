@@ -17,7 +17,7 @@ namespace ConsoleChatApp.Services
 
         public void Type()
         {
-            var otherUser = _repository.GetOtherUser(CommonData.Login);
+            var otherUser = _repository.GetOtherUserByLogin(CommonData.Login);
             Console.WriteLine($"{otherUser.FirstName} {otherUser.LastName} is already logged in. Type your message:");
             var hasOtherUserLoggedOut = false;
 
@@ -36,8 +36,8 @@ namespace ConsoleChatApp.Services
 
                     using (AppDbContext _dataContext = new AppDbContext())
                     {
-                        var currentUserId = _repository.GetUser(CommonData.Login).id;
-                        var messageRecieverId = _repository.GetOtherUser(CommonData.Login).id;
+                        var currentUserId = _repository.GetUserByLogin(CommonData.Login).id;
+                        var messageRecieverId = _repository.GetOtherUserByLogin(CommonData.Login).id;
 
                         var message = Message.Factory.Create(messageText, currentUserId, messageRecieverId);
                         _service.Add(message);

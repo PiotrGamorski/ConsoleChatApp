@@ -6,10 +6,10 @@ namespace ConsoleChatApp.Interfaces
 {
     public interface IUserRepository
     {
-        Person GetUser(int id);
-        Person GetUser(string login);
-        Person GetOtherUser(string currentPersonLogin);
+        Person GetUserById(int id);
+        Person GetUserByLogin(string login);
+        Person GetOtherUserByLogin(string currentPersonLogin);
         bool IsOtherUserLoggedIn(string currentPersonLogin);
-        Task<List<Person>> GetAvailableUsers();
+        Task<List<Person>> GetAllAvailableUsers();
     }
 }
